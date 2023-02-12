@@ -29,7 +29,7 @@ We sub-sample the data. Full data takes too much time to estimate for the class.
 
 ```{r}
 set.seed(20200813)
-df_brexit <- read_csv("data/df_bes.csv.gz") %>%
+df_brexit <- read_csv("data/data_bes.csv.gz") %>%
   sample_n(3000) # sampling data so
 ```
 
@@ -101,7 +101,12 @@ fm_all <- formula("LeaveVote ~ .")
 - What do you find?
 
 ```{r eval = F}
-
+library(tree)
+class_tree <- tree(fm_attitudes, data = df_train_preped)
+plot(class_tree)
+text(class_tree)
+predictions<- predict(class_tree, df_test_preped, type = "class")
+metrics<- confusionMatrix(predictions, df_test_preped$LeaveVote, positive = "1", mode = "prec_recall")
 ```
 
 ## Randowm forest regression and adaBoost
@@ -111,6 +116,27 @@ fm_all <- formula("LeaveVote ~ .")
 - For random forest training, use `tuneGrid = data.frame(mtry = c(2:4))`. Otherwise it's too slow...
 
 ```{r cache=T}
+ctrl <- trainControl(method = 'repeatedcv')
+mod_rf <- train(fm_attitudes,
+                data = df_train_preped, 
+                method = "rf", 
+                trControl = ctrl, 
+                tuneGrid = data.frame(mtry = c(2:4)))
+mod_rf
 
+pred_test_rf <- predict(mod_rf, newdata = df_test_preped)
+confusionMatrix(pred_test_rf, df_test_preped$LeaveVote, positive = "1", 
+                mode = "prec_recall")
+
+
+mod_ada <- train(fm_attitudes,
+                  data = df_train_preped, 
+                  trControl = ctrl, 
+                  method = "ada")
+mod_ada
+
+pred_test_ada <- predict(mod_ada, newdata = data_test_preped)
+confusionMatrix(pred_test_ada, data_test_preped$LeaveVote, positive = "1", 
+                mode = "prec_recall")
 ```
 
