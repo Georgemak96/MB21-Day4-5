@@ -111,6 +111,7 @@ model.matrix(fm_socdem, data = df_train_preped) %>% head()
 Run a few models, and evaluate them. Which one has the better predictive performance?
 
 ```{r}
+###could create a function only with a parameter of fm which prints out the train and test metrics 
 socdem<- glm(fm_socdem, data = df_train_preped, family = "binomial")
 identity<- glm(fm_identity, data = df_train_preped, family = "binomial")
 antielite<- glm(fm_antielite, data = df_train_preped, family = "binomial")
