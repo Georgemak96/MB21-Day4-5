@@ -138,5 +138,15 @@ mod_ada
 pred_test_ada <- predict(mod_ada, newdata = df_test_preped)
 confusionMatrix(pred_test_ada, df_test_preped$LeaveVote, positive = "1", 
                 mode = "prec_recall")
+var_importance<- caret::varImp(mod_rf)
+caret:::plot.varImp.train(var_importance)
+caret::dotPlot(var_importance)
+mod_boosting <- train(fm_attitudes,
+                  data = df_train_preped, 
+                  trControl = ctrl, 
+                  method = "gbm")
+pred_test_boosting <- predict(mod_boosting, newdata = df_test_preped)
+confusionMatrix(pred_test_boosting, df_test_preped$LeaveVote, positive = "1", 
+                mode = "prec_recall")
 ```
 
