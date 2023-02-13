@@ -123,7 +123,7 @@ mod_rf <- train(fm_attitudes,
                 trControl = ctrl, 
                 tuneGrid = data.frame(mtry = c(2:4)))
 mod_rf
-
+plot(mod_rf)
 pred_test_rf <- predict(mod_rf, newdata = df_test_preped)
 confusionMatrix(pred_test_rf, df_test_preped$LeaveVote, positive = "1", 
                 mode = "prec_recall")
@@ -135,8 +135,8 @@ mod_ada <- train(fm_attitudes,
                   method = "ada")
 mod_ada
 
-pred_test_ada <- predict(mod_ada, newdata = data_test_preped)
-confusionMatrix(pred_test_ada, data_test_preped$LeaveVote, positive = "1", 
+pred_test_ada <- predict(mod_ada, newdata = df_test_preped)
+confusionMatrix(pred_test_ada, df_test_preped$LeaveVote, positive = "1", 
                 mode = "prec_recall")
 ```
 
